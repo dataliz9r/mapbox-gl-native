@@ -5,7 +5,6 @@ import android.graphics.PointF;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -471,7 +470,6 @@ final class LocationLayerController {
     new MapboxAnimator.AnimationsValueChangeListener<Float>() {
       @Override
       public void onNewAnimationValue(Float value) {
-        // TODO: Hide the pulsing circle layer once the accuracy circle is visibile? (i.e. newAnimationValue > 0)
         updateAccuracyRadius(value);
       }
     };
