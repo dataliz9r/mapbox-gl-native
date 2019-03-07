@@ -82,7 +82,7 @@ class LocationComponentTest : EspressoTest() {
         val locationEngine = component.locationEngine
         assertThat(locationEngine, notNullValue())
 
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
       }
     }
 
@@ -118,7 +118,7 @@ class LocationComponentTest : EspressoTest() {
         assertThat(locationEngine, notNullValue())
         assertThat(componentOptions, notNullValue())
 
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         assertThat(componentOptions?.accuracyAlpha(), `is`(.5f))
         assertThat(componentOptions?.accuracyColor(), `is`(Color.BLUE))
       }
@@ -157,7 +157,7 @@ class LocationComponentTest : EspressoTest() {
         assertThat(locationEngine, nullValue())
         assertThat(componentOptions, notNullValue())
 
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         assertThat(componentOptions?.accuracyAlpha(), `is`(.5f))
         assertThat(componentOptions?.accuracyColor(), `is`(Color.BLUE))
       }
@@ -205,7 +205,7 @@ class LocationComponentTest : EspressoTest() {
 
         // Force the first location update
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         // Check if the puck is visible
         assertThat(mapboxMap.queryRenderedFeatures(location, FOREGROUND_LAYER).isEmpty(), `is`(false))
@@ -240,7 +240,7 @@ class LocationComponentTest : EspressoTest() {
         component.isLocationComponentEnabled = true
 
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         uiController.loopMainThreadForAtLeast(300) // waiting for stale state
 
         mapboxMap.querySourceFeatures(LOCATION_SOURCE).also { feature ->
@@ -287,7 +287,7 @@ class LocationComponentTest : EspressoTest() {
         }
 
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         val feature = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0]
 
         assertThat(mapboxMap.queryRenderedFeatures(location, FOREGROUND_LAYER).isEmpty(), `is`(false))
@@ -329,7 +329,7 @@ class LocationComponentTest : EspressoTest() {
           mapboxMap.addImageFromDrawable("custom-foreground-bitmap", it)
           mapboxMap.addImageFromDrawable("custom-gps-bitmap", it)
         }
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         val foregroundId = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getStringProperty(PROPERTY_FOREGROUND_ICON)
 
         assertThat(foregroundId, `is`(equalTo("custom-gps-bitmap")))
@@ -360,13 +360,13 @@ class LocationComponentTest : EspressoTest() {
 
         component.renderMode = RenderMode.GPS
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         val foregroundId = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getStringProperty(PROPERTY_FOREGROUND_ICON)
         assertThat(foregroundId, `is`(equalTo("custom-gps-bitmap")))
 
         component.applyStyle(LocationComponentOptions.builder(context).build())
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertEquals(FOREGROUND_ICON, mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getStringProperty(PROPERTY_FOREGROUND_ICON))
       }
@@ -395,13 +395,13 @@ class LocationComponentTest : EspressoTest() {
 
         component.renderMode = RenderMode.GPS
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         val foregroundId = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getStringProperty(PROPERTY_FOREGROUND_ICON)
         assertThat(foregroundId, `is`(equalTo("custom-gps-bitmap")))
 
         component.renderMode = RenderMode.NORMAL
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertEquals(FOREGROUND_ICON, mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getStringProperty(PROPERTY_FOREGROUND_ICON))
       }
@@ -430,14 +430,14 @@ class LocationComponentTest : EspressoTest() {
         component.isLocationComponentEnabled = true
 
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         uiController.loopMainThreadForAtLeast(250) // engaging stale state
 
         assertThat(mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
 
         component.onStop()
         component.onStart()
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertThat(mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
         assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(false))
@@ -461,13 +461,13 @@ class LocationComponentTest : EspressoTest() {
 
         component.isLocationComponentEnabled = true
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertThat(mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(false))
 
         component.onStop()
         component.onStart()
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertThat(mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(false))
         assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(true))
@@ -499,7 +499,7 @@ class LocationComponentTest : EspressoTest() {
         component.isLocationComponentEnabled = true
 
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         mapboxMap.querySourceFeatures(LOCATION_SOURCE).also { feature ->
           feature.forEach {
@@ -526,7 +526,7 @@ class LocationComponentTest : EspressoTest() {
 
         component.isLocationComponentEnabled = true
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         val point: Point = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].geometry() as Point
         assertThat(component.locationEngine, nullValue())
@@ -550,14 +550,14 @@ class LocationComponentTest : EspressoTest() {
                 .build())
         component.isLocationComponentEnabled = true
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         val point: Point = mapboxMap.queryRenderedFeatures(location, FOREGROUND_LAYER)[0].geometry() as Point
         assertEquals(point.latitude(), location.latitude, 0.1)
         assertEquals(point.longitude(), location.longitude, 0.1)
 
         component.isLocationComponentEnabled = false
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         assertThat(mapboxMap.queryRenderedFeatures(location, FOREGROUND_LAYER).isEmpty(), `is`(true))
       }
     }
@@ -580,7 +580,7 @@ class LocationComponentTest : EspressoTest() {
         component.isLocationComponentEnabled = false
         mapboxMap.setStyle(Style.Builder().fromUrl(Style.LIGHT))
         component.isLocationComponentEnabled = true
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(true))
       }
@@ -670,7 +670,7 @@ class LocationComponentTest : EspressoTest() {
         component.onStart()
 
         mapboxMap.setStyle(Style.Builder().fromUrl(Style.DARK))
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
       }
     }
     executeComponentTest(componentAction)
@@ -690,7 +690,7 @@ class LocationComponentTest : EspressoTest() {
         mapboxMap.setStyle(Style.Builder().fromUrl(Style.DARK))
         component.onStop()
         component.onStart()
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
       }
     }
     executeComponentTest(componentAction)
@@ -709,7 +709,7 @@ class LocationComponentTest : EspressoTest() {
         component.isLocationComponentEnabled = true
         component.onStop()
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertThat(mapboxMap.querySourceFeatures(LOCATION_SOURCE).isEmpty(), `is`(true))
       }
@@ -731,7 +731,7 @@ class LocationComponentTest : EspressoTest() {
         component.onStop()
         component.forceLocationUpdate(location)
         component.onStart()
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         val point: Point = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].geometry() as Point
         assertEquals(point.latitude(), location.latitude, 0.1)
@@ -755,9 +755,9 @@ class LocationComponentTest : EspressoTest() {
         component.forceLocationUpdate(location)
         mapboxMap.setStyle(Style.Builder().fromUrl(Style.LIGHT))
         component.onStop()
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         component.onStart()
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         val point: Point = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].geometry() as Point
         assertEquals(point.latitude(), location.latitude, 0.1)
@@ -792,7 +792,7 @@ class LocationComponentTest : EspressoTest() {
         component.applyStyle(options)
         }
 
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
       }
     }
     executeComponentTest(componentAction)
@@ -818,7 +818,7 @@ class LocationComponentTest : EspressoTest() {
         component.forceLocationUpdate(location)
         }
 
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
       }
     }
     executeComponentTest(componentAction)
@@ -834,7 +834,7 @@ class LocationComponentTest : EspressoTest() {
       override fun onLocationComponentAction(component: LocationComponent, mapboxMap: MapboxMap,
                                              style: Style, uiController: UiController, context: Context) {
         styleChangeIdlingResource.waitForStyle(mapboxMap, MAPBOX_HEAVY_STYLE)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         locationComponentActivationOptions = LocationComponentActivationOptions
                 .builder(context, mapboxMap.style!!)
@@ -873,13 +873,13 @@ class LocationComponentTest : EspressoTest() {
         component.renderMode = RenderMode.GPS
         location.bearing = 77f
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         uiController.loopMainThreadForAtLeast(MAX_ANIMATION_DURATION_MS)
         assertEquals(77f, mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getNumberProperty(PROPERTY_GPS_BEARING).toFloat(), 0.1f)
 
         location.bearing = 92f
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         uiController.loopMainThreadForAtLeast(MAX_ANIMATION_DURATION_MS) // Waiting for the animation to finish
         assertEquals(92.0f, mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getNumberProperty(PROPERTY_GPS_BEARING).toFloat(), 0.1f)
       }
@@ -901,7 +901,7 @@ class LocationComponentTest : EspressoTest() {
         component.cameraMode = CameraMode.TRACKING_GPS
         location.bearing = 77f
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         uiController.loopMainThreadForAtLeast(MAX_ANIMATION_DURATION_MS)
 
         assertEquals(77.0, mapboxMap.cameraPosition.bearing, 0.1)
@@ -912,7 +912,7 @@ class LocationComponentTest : EspressoTest() {
         location.latitude = 30.0
         location.longitude = 35.0
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         uiController.loopMainThreadForAtLeast(MAX_ANIMATION_DURATION_MS) // Waiting for the animation to finish
 
         assertEquals(92.0, mapboxMap.cameraPosition.bearing, 0.1)
@@ -940,7 +940,7 @@ class LocationComponentTest : EspressoTest() {
 
         location.bearing = 77f
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         uiController.loopMainThreadForAtLeast(MAX_ANIMATION_DURATION_MS)
 
         assertEquals(77.0, mapboxMap.cameraPosition.bearing, 0.1)
@@ -951,7 +951,7 @@ class LocationComponentTest : EspressoTest() {
         location.latitude = 30.0
         location.longitude = 35.0
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         uiController.loopMainThreadForAtLeast(MAX_ANIMATION_DURATION_MS)
 
         assertEquals(92.0, mapboxMap.cameraPosition.bearing, 0.1)
@@ -980,7 +980,7 @@ class LocationComponentTest : EspressoTest() {
 
         location.bearing = 77f
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         uiController.loopMainThreadForAtLeast(MAX_ANIMATION_DURATION_MS)
 
         assertEquals(bearing, mapboxMap.cameraPosition.bearing, 0.1)
@@ -991,7 +991,7 @@ class LocationComponentTest : EspressoTest() {
         location.latitude = 30.0
         location.longitude = 35.0
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         uiController.loopMainThreadForAtLeast(MAX_ANIMATION_DURATION_MS)
 
         assertEquals(bearing, mapboxMap.cameraPosition.bearing, 0.1)
@@ -1016,7 +1016,7 @@ class LocationComponentTest : EspressoTest() {
         component.cameraMode = CameraMode.TRACKING
         component.cameraMode = CameraMode.NONE
         component.forceLocationUpdate(location)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertThat(mapboxMap.uiSettings.focalPoint, nullValue())
       }
@@ -1039,7 +1039,7 @@ class LocationComponentTest : EspressoTest() {
         val zoom = mapboxMap.cameraPosition.zoom
         component.zoomWhileTracking(10.0)
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIM_DURATION)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertEquals(zoom, mapboxMap.cameraPosition.zoom, 0.1)
       }
@@ -1061,7 +1061,7 @@ class LocationComponentTest : EspressoTest() {
         component.cameraMode = CameraMode.TRACKING
         component.zoomWhileTracking(10.0)
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIM_DURATION)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertEquals(10.0, mapboxMap.cameraPosition.zoom, 0.1)
       }
@@ -1086,7 +1086,7 @@ class LocationComponentTest : EspressoTest() {
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIM_DURATION / 2)
         component.cameraMode = CameraMode.NONE
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIM_DURATION / 2)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertEquals(15.0 / 2.0, mapboxMap.cameraPosition.zoom, 3.0)
       }
@@ -1112,7 +1112,7 @@ class LocationComponentTest : EspressoTest() {
         component.onStop()
         component.zoomWhileTracking(10.0)
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIM_DURATION)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertEquals(zoom, mapboxMap.cameraPosition.zoom, 0.1)
       }
@@ -1137,7 +1137,7 @@ class LocationComponentTest : EspressoTest() {
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIM_DURATION / 2)
         component.cancelZoomWhileTrackingAnimation()
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIM_DURATION / 2)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertEquals(15.0 / 2.0, mapboxMap.cameraPosition.zoom, 3.0)
       }
@@ -1160,7 +1160,7 @@ class LocationComponentTest : EspressoTest() {
         val tilt = mapboxMap.cameraPosition.tilt
         component.tiltWhileTracking(30.0)
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIM_DURATION)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertEquals(tilt, mapboxMap.cameraPosition.tilt, 0.1)
       }
@@ -1182,7 +1182,7 @@ class LocationComponentTest : EspressoTest() {
         component.cameraMode = CameraMode.TRACKING
         component.tiltWhileTracking(30.0)
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIM_DURATION)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertEquals(30.0, mapboxMap.cameraPosition.tilt, 0.1)
       }
@@ -1207,7 +1207,7 @@ class LocationComponentTest : EspressoTest() {
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIM_DURATION / 2)
         component.cameraMode = CameraMode.NONE
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIM_DURATION / 2)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertEquals(30.0 / 2.0, mapboxMap.cameraPosition.tilt, 3.0)
       }
@@ -1232,7 +1232,7 @@ class LocationComponentTest : EspressoTest() {
         component.onStop()
         component.tiltWhileTracking(30.0)
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIM_DURATION)
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
 
         assertEquals(tilt, mapboxMap.cameraPosition.tilt, 0.1)
       }
@@ -1281,7 +1281,7 @@ class LocationComponentTest : EspressoTest() {
         mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(51.0, 17.0)))
         mapboxMap.moveCamera(CameraUpdateFactory.bearingTo(90.0))
         component.isLocationComponentEnabled = true
-        TestingAsyncUtils.waitForLayer(uiController, idlingResource.mapView)
+        TestingAsyncUtils.waitForLayer(uiController, mapView)
         uiController.loopMainThreadForAtLeast(MAX_ANIMATION_DURATION_MS)
 
         assertEquals(location.bearing.toDouble(), mapboxMap.cameraPosition.bearing, 0.1)
