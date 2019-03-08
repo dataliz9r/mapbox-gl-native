@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: "com.jaredsburrows.license"
 apply plugin: 'kotlin-android'
+apply plugin: 'jacoco'
 
 dependencies {
     lintChecks project(":MapboxGLAndroidSDKLint")
@@ -141,6 +142,7 @@ android {
     buildTypes {
         debug {
             jniDebuggable true
+            testCoverageEnabled true
         }
     }
 }

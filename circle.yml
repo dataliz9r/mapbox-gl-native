@@ -643,6 +643,9 @@ jobs:
       - run:
           name: Build release Test App
           command: make android
+      - run:
+          name: Build unit test code coverage reports for MapboxGLAndroidSDK module
+          command: ./gradlew clean createDebugCoverageReport --continue -Pmapbox.abis=all 
       - save-dependencies: { gradle: true }
       - run:
           name: gzip debugable .so files
@@ -665,6 +668,10 @@ jobs:
       - run:
           name: Record size
           command: platform/android/scripts/metrics.sh
+      - run:
+          name: Report Android code coverage
+          command: |
+              platform/android/scripts/code-coverage.sh CI
       - deploy:
           name: Publish to Bintray
           command: |

@@ -731,6 +731,11 @@ android-check : android-checkstyle android-lint-sdk android-lint-test-app
 android-checkstyle: platform/android/gradle/configuration.gradle
 	cd platform/android && $(MBGL_ANDROID_GRADLE) -Pmapbox.abis=none :MapboxGLAndroidSDK:checkstyle :MapboxGLAndroidSDKTestApp:checkstyle
 
+# Runs unit test code coverage on the Android code
+.PHONY: run-android-unit-test-code-coverage
+android-checkstyle: platform/android/gradle/configuration.gradle
+	cd platform/android && $(MBGL_ANDROID_GRADLE) -Pmapbox.abis=all clean :MapboxGLAndroidSDK:createDebugCoverageReport
+
 # Runs lint on the Android SDK code
 .PHONY: android-lint-sdk
 android-lint-sdk: platform/android/gradle/configuration.gradle
