@@ -645,7 +645,7 @@ jobs:
           command: make android
       - run:
           name: Build unit test code coverage reports for MapboxGLAndroidSDK module
-          command: ./gradlew clean createDebugCoverageReport --continue -Pmapbox.abis=all 
+          command: ./gradlew clean jacocoTestReportDebug -Pmapbox.abis=all
       - save-dependencies: { gradle: true }
       - run:
           name: gzip debugable .so files

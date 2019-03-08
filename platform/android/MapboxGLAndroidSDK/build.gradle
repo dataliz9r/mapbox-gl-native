@@ -1,7 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: "com.jaredsburrows.license"
 apply plugin: 'kotlin-android'
-apply plugin: 'jacoco'
+apply plugin: "com.vanniktech.android.junit.jacoco"
+
 
 dependencies {
     lintChecks project(":MapboxGLAndroidSDKLint")
