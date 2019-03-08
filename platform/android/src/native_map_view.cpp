@@ -288,11 +288,13 @@ void NativeMapView::setStyleJson(jni::JNIEnv& env, const jni::String& json) {
 }
 
 void NativeMapView::setLatLngBounds(jni::JNIEnv& env, const jni::Object<mbgl::android::LatLngBounds>& jBounds) {
+    BoundOptions bounds;
     if (jBounds) {
-        map->setLatLngBounds(mbgl::android::LatLngBounds::getLatLngBounds(env, jBounds));
+        bounds.withLatLngBounds(mbgl::android::LatLngBounds::getLatLngBounds(env, jBounds));
     } else {
-        map->setLatLngBounds(mbgl::LatLngBounds::world());
+        bounds.withLatLngBounds(mbgl::LatLngBounds::world());
     }
+    map->setBounds(bounds);
 }
 
 void NativeMapView::cancelTransitions(jni::JNIEnv&) {
@@ -425,19 +427,19 @@ void NativeMapView::resetZoom(jni::JNIEnv&) {
 }
 
 void NativeMapView::setMinZoom(jni::JNIEnv&, jni::jdouble zoom) {
-    map->setMinZoom(zoom);
+    map->setBound(BoundsOptions().withMinZoom(zoom));
 }
 
 jni::jdouble NativeMapView::getMinZoom(jni::JNIEnv&) {
-    return map->getMinZoom();
+    return map->getBounds().minZoom.value_or(util::MIN_ZOOM);
 }
 
 void NativeMapView::setMaxZoom(jni::JNIEnv&, jni::jdouble zoom) {
-    map->setMaxZoom(zoom);
+    map->setBound(BoundsOptions().withMaxZoom(zoom));
 }
 
 jni::jdouble NativeMapView::getMaxZoom(jni::JNIEnv&) {
-    return map->getMaxZoom();
+    return map->getBounds().maxZoom.value_or(util::MAX_ZOOM);
 }
 
 void NativeMapView::rotateBy(jni::JNIEnv&, jni::jdouble sx, jni::jdouble sy, jni::jdouble ex, jni::jdouble ey, jni::jlong duration) {

@@ -2,6 +2,7 @@
 
 #include <mbgl/util/optional.hpp>
 #include <mbgl/util/chrono.hpp>
+#include <mbgl/map/bound_options.hpp>
 #include <mbgl/map/map_observer.hpp>
 #include <mbgl/map/map_options.hpp>
 #include <mbgl/map/mode.hpp>
@@ -77,12 +78,8 @@ public:
     LatLngBounds latLngBoundsForCamera(const CameraOptions&) const;
 
     // Bounds
-    void setLatLngBounds(LatLngBounds);
-    LatLngBounds getLatLngBounds() const;
-    void setMinZoom(double);
-    double getMinZoom() const;
-    void setMaxZoom(double);
-    double getMaxZoom() const;
+    void setBounds(const BoundOptions& options);
+    BoundOptions getBounds() const;
 
     // North Orientation
     void setNorthOrientation(NorthOrientation);
