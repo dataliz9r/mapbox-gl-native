@@ -251,6 +251,9 @@ public:
     void destroyRenderer();
     void setFramebufferObject(quint32 fbo, const QSize &size);
 
+    // Feature queries (@see mbgl/renderer/renderer.hpp)
+    std::vector<QMapbox::Feature> queryRenderedFeatures(const QMapbox::Coordinate& point, const QMapbox::RenderedQueryOptions& options = {}) const;
+
 public slots:
     void render();
     void connectionEstablished();

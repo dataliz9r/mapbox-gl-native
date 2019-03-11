@@ -131,6 +131,14 @@ Q_MAPBOXGL_EXPORT double metersPerPixelAtLatitude(double latitude, double zoom);
 Q_MAPBOXGL_EXPORT ProjectedMeters projectedMetersForCoordinate(const Coordinate &);
 Q_MAPBOXGL_EXPORT Coordinate coordinateForProjectedMeters(const ProjectedMeters &);
 
+struct Q_MAPBOXGL_EXPORT RenderedQueryOptions {
+  RenderedQueryOptions(QVector<QString> layerIDs_ = {}, QString filter_ = {})
+    : layerIDs(layerIDs_), filter(filter_) {}
+
+  QVector<QString> layerIDs;
+  QString filter;
+};
+
 } // namespace QMapbox
 
 Q_DECLARE_METATYPE(QMapbox::Coordinate);

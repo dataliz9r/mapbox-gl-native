@@ -33,6 +33,8 @@ public:
     virtual ~QMapboxGLMapRenderer();
 
     void render();
+    const std::unique_ptr<mbgl::Renderer>& renderer() {return m_renderer; };
+
     void updateFramebuffer(quint32 fbo, const mbgl::Size &size);
     void setObserver(std::shared_ptr<mbgl::RendererObserver>);
 

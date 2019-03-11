@@ -61,6 +61,7 @@
 #include <functional>
 #include <memory>
 #include <sstream>
+#include <iostream>
 
 using namespace QMapbox;
 
@@ -623,6 +624,115 @@ QMapboxGL::QMapboxGL(QObject *parent_, const QMapboxGLSettings &settings, const 
 QMapboxGL::~QMapboxGL()
 {
     delete d_ptr;
+}
+
+std::vector<QMapbox::Feature>
+QMapboxGL::queryRenderedFeatures(const QMapbox::Coordinate& point, const QMapbox::RenderedQueryOptions& options) const
+{
+  //  Example using QMapboxGL 'm_map' object
+  //  --------------------------------------
+  //
+  //  QPointF pos(x,y);
+  //  QMapbox::RenderedQueryOptions opts =
+  //    {{ "section_insulator", "section_switch" }};
+  //
+  //  std::vector<QMapbox::Feature> features =
+  //    m_map->queryRenderedFeatures(
+  //      QMapbox::Coordinate(pos.x(),pos.y()),opts);
+  //
+  //  for (auto it = features.begin() ; it != features.end() ; ++it)
+  //  {
+  //    for (auto props_it = (*it).properties.begin() ;
+  //         props_it != (*it).properties.end() ;
+  //         ++props_it)
+  //    {
+  //      qDebug() << props_it.key() << " = " << props_it.value();
+  //    }
+  //  }
+
+  qDebug() << "QMapboxGL::queryRenderedFeatures @" << point.first << "," << point.second;
+
+  std::vector<QMapbox::Feature> t_qmapbox_features;
+
+  mbgl::RenderedQueryOptions mbgl_options(std::vector<std::string>(),{});
+
+  for (int i = 0; i < options.layerIDs.size(); ++i)
+  {
+    qDebug().nospace() << "  @layerid: " << QString(options.layerIDs.at(i));
+    mbgl_options.layerIDs->push_back(options.layerIDs.at(i).toStdString());
+  }
+
+  std::vector<mbgl::Feature> t_mbgl_features =
+    d_ptr->m_mapRenderer->renderer()->queryRenderedFeatures(
+      mbgl::ScreenCoordinate(point.first,point.second),
+      mbgl_options
+    );
+
+  qDebug() << "Features: " << t_mbgl_features.size();
+
+
+  int t_feature_count(0);
+  for (std::vector<mbgl::Feature>::const_iterator it = t_mbgl_features.cbegin()
+      ; it != t_mbgl_features.cend() ; ++it)
+  {
+    qDebug() << "Feature " << ++t_feature_count;
+
+    //@see vendor/geometry.hpp/include/mapbox/feature.hpp
+    mbgl::PropertyMap t_property_map = (*it).properties;
+
+    QMapbox::Feature t_qmapbox_feature;
+
+    t_qmapbox_feature.type = QMapbox::Feature::PointType;
+
+    for ( auto t_property_map_iter = t_property_map.begin();
+          t_property_map_iter != t_property_map.end();
+          ++t_property_map_iter )
+    {
+      try
+      {
+        QString t_key, t_value;
+        t_key = QString::fromUtf8(t_property_map_iter->first.c_str());
+
+        switch (t_property_map_iter->second.which())
+        {
+          case 0: //null_value
+            t_value = QString("TYPE 0");
+            break;
+          case 1: //bool
+            t_value = QString::number(mapbox::util::get<bool>(t_property_map_iter->second));
+            break;
+          case 2: //uint64
+            t_value = QString::number(mapbox::util::get<uint64_t>(t_property_map_iter->second));
+            break;
+          case 3: //int64
+            t_value = QString::number(mapbox::util::get<int64_t>(t_property_map_iter->second));
+            break;
+          case 4: //double
+            t_value = QString::number(mapbox::util::get<double>(t_property_map_iter->second));
+            break;
+          case 5: //string
+            t_value = QString::fromUtf8(mapbox::util::get<std::string>(t_property_map_iter->second).c_str());
+            t_qmapbox_feature.properties[QString::fromStdString(t_property_map_iter->first)] =
+                QString::fromStdString(mapbox::util::get<std::string>(t_property_map_iter->second));
+            break;
+          default:
+            t_value = QString("TYPE 6|7");
+            break;
+        }
+
+        qDebug().noquote() << "    " << t_key << " = " << t_value;
+      }
+      catch(const std::logic_error& e)
+      {
+        qDebug() << "Exception: " << e.what();
+      }
+    }
+
+    t_qmapbox_features.push_back(t_qmapbox_feature);
+  }
+
+  return t_qmapbox_features;
+
 }
 
 /*!
